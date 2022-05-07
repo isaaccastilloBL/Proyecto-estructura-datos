@@ -1,11 +1,11 @@
 #include<iostream>
 #include<fstream>
-//#include<pwd.h>
+#include<pwd.h>
 #include<string>
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-//#include <filesystem>
+#include <filesystem>
 #include <unistd.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -33,22 +33,15 @@ string encriptar(string cadena);
 string desencriptar(string cadena);
 void get_museos();
 void busqueda(string palabra);
+void print_image(string name);
 
 int main(){
-	//cout<<"Ingrese una cadena de caracteres: ";
-    //string cadena;
-    //getline(cin,cadena);
-    //string cadena_encriptada=encriptar(cadena);
-    //string cadena_desencriptada=desencriptar(cadena_encriptada);
-    //cout<<"La cadena encriptada es: "<<cadena_encriptada<<endl;
-    //cout<<"La cadena desencriptada es: "<<cadena_desencriptada<<endl;
-
 	ifstream archivo("museos.txt");
 	if(archivo.is_open()){
 		archivo.close();
 	}
 	else{
-		system("python ./download_file.py");	
+		system("python3 ./download_file.py");	
 	}
 
 	while (true)
@@ -63,7 +56,7 @@ int main(){
 void  generate_menu(){
 	int opcion=0;
 	cout<<"+---------------------------------------------------------+"<<endl;
-	//cout<<"                   Welcome "+getUserName()<<endl;
+	cout<<"                   Welcome "+getUserName()<<endl;
 	cout<<"+---------------------------------------------------------+"<<endl;
 	cout<<"+  __   __  __   __  _______  _______  _______  _______   +"<<endl;
 	cout<<"+ |  |_|  ||  | |  ||       ||       ||       ||       |  +"<<endl;
@@ -89,7 +82,6 @@ void  generate_menu(){
 	actions(opcion);
 }
 
-/*
 string getUserName(){
     string userName;
     struct passwd *pw;
@@ -98,7 +90,6 @@ string getUserName(){
     return userName;
 
 }
-*/
 void actions(int option){
 	switch(option){
 		case 1:
@@ -113,11 +104,10 @@ void actions(int option){
 			break;
 		case 3:
 			cout<<"Opcion 3"<<endl;
-			break;
-		case 4:
-			cout<<"Opcion 4"<<endl;
 			system("python ./download_file.py");
 			break;
+		case 4:
+			exit(1);
 		default:
 			cout<<"Ingresa una opcion valida"<<endl;
 			generate_menu();
@@ -125,52 +115,59 @@ void actions(int option){
 	}
 }
 
-string encriptar(std::string cadena){
-    string cadena_encriptada;
-    int i;
-    for(i=0;i<cadena.size();i++){
-        cadena_encriptada+=cadena[i]+1;
-    }
-    return cadena_encriptada;
-}
-
-string desencriptar(std::string cadena){
-    std::string cadena_desencriptada;
-    int i;
-    for(i=0;i<cadena.size();i++){
-        cadena_desencriptada+=cadena[i]-1;
-    }
-    return cadena_desencriptada;
-}
-
 void get_museos(){
-    //system("python ./download_file.py");
-    string nombreArchivo="museos.txt";
-    ifstream archivo(nombreArchivo.c_str());
-    string linea;
-    while (getline(archivo, linea)) {
-        cout << linea << endl;
-    }
+	int contador=0;
+    	string nombreArchivo="museos.txt";
+    	ifstream archivo(nombreArchivo.c_str());
+    	string linea;
+	string name_image;
+    	while (getline(archivo, linea)) {
+		if(contador==0 or contador==7 or contador==14 or contador==21 or contador==28 or contador==35 or contador==42 or contador==49 or contador==56 or contador==63){
+			name_image=linea;
+			print_image(name_image);
+		}else{
+        		cout << linea << endl;
+		}
+		contador++;
+    	}
 }
 
 void busqueda(string palabra){
-    string linea = "Museo: " + palabra;
-    string nombreArchivo="museos.txt";
-    ifstream archivo(nombreArchivo.c_str());
+    	string linea = "Museo: " + palabra;
+	string name_image=palabra;
+	string extension=".jpg";
+	name_image+=extension;
+	print_image(name_image);
+    	string nombreArchivo="museos.txt";
+    	ifstream archivo(nombreArchivo.c_str());
     
-    if(archivo.is_open()){
-        while(getline(archivo,linea)){
-            if(linea.find(palabra)!=string::npos){
-                cout<<linea<<endl;
-                getline(archivo,linea);
-                cout<<linea<<endl;
-                getline(archivo,linea);
-                cout<<linea<<endl;
-            }
-        }
-        archivo.close();
-    }
-    else{
-        cout<<"No se pudo abrir el archivo"<<endl;
-    }
+    	if(archivo.is_open()){
+        	while(getline(archivo,linea)){
+            		if(linea.find(palabra)!=string::npos){
+                		cout<<linea<<endl;
+                		getline(archivo,linea);
+                		cout<<linea<<endl;
+                		getline(archivo,linea);
+                		cout<<linea<<endl;
+				getline(archivo,linea);
+                                cout<<linea<<endl;
+				getline(archivo,linea);
+                                cout<<linea<<endl;
+				getline(archivo,linea);
+                                cout<<linea<<endl;
+            		}
+        	}
+        	archivo.close();
+    	}
+    	else{
+        	cout<<"No se pudo abrir el archivo"<<endl;
+    	}
+}
+
+void print_image(string name){
+	string command="kitty +kitten icat ";
+	command+=name;
+	char buffer[100];
+	strcpy(buffer,command.c_str());
+	system(buffer);
 }
